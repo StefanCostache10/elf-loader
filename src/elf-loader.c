@@ -44,6 +44,15 @@ void load_and_run(const char *filename, int argc, char **argv, char **envp)
 	 * Validate ELF magic bytes - "Not a valid ELF file" + exit code 3 if invalid.
 	 * Validate ELF class is 64-bit (ELFCLASS64) - "Not a 64-bit ELF" + exit code 4 if invalid.
 	 */
+	if (memcmp(elf_contents, "\177ELF", 4) != 0) {
+		fprintf(stderr, "Not a valid ELF file\n");
+		exit(3);
+	}
+	if (((unsigned char *)elf_contents)[4] != 2) {
+		fprintf(stderr, "Not a 64-bit ELF\n");
+		exit(4);
+	}
+	
 
 	/**
 	 * TODO: Load PT_LOAD segments
